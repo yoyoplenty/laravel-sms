@@ -2,49 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Teacher;
-use App\Http\Requests\StoreTeacherRequest;
-use App\Http\Requests\UpdateTeacherRequest;
+use App\Http\Requests\StoreteacherRequest;
+use App\Http\Requests\UpdateteacherRequest;
+use App\Http\Resources\TeacherResource;
+use App\Repositories\TeacherRepository;
+use Illuminate\Http\JsonResponse;
 
-class TeacherController extends Controller
-{
+class TeacherController extends Controller {
+
+    protected $teacherRepository;
+
+    public function __construct(TeacherRepository $repository) {
+        $this->teacherRepository = $repository;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function index(): JsonResponse {
+        $allteachers = $this->teacherRepository->paginate();
+
+        return new JsonResponse([
+            'message' => "successfully fetched all teachers",
+            "status" => 200,
+            "data" => $allteachers
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTeacherRequest $request)
-    {
-        //
+    public function store(StoreteacherRequest $request): teacherResource {
+        $createdteacher =  $this->teacherRepository->createTeacher($request->all());
+
+        return new teacherResource($createdteacher);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Teacher $teacher)
-    {
-        //
+    public function show($id): teacherResource {
+        $teacherDetails =  $this->teacherRepository->findWithMissing($id);
+
+        return new teacherResource($teacherDetails);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTeacherRequest $request, Teacher $teacher)
-    {
-        //
+    public function update(UpdateteacherRequest $request, $id): teacherResource {
+        $updatedteacher = $this->teacherRepository->update($id, $request->all());
+
+        return new teacherResource($updatedteacher);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Teacher $teacher)
-    {
-        //
+    public function destroy($id): teacherResource {
+        $this->teacherRepository->delete($id);
+
+        return new teacherResource(null);
     }
 }

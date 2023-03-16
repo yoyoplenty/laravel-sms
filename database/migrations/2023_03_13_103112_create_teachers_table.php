@@ -13,8 +13,12 @@ return new class extends Migration {
             $table->id();
             $table->string('staff_id');
             $table->string('phone_number');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id');
             $table->foreignId('grade_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('grade_id')->references('id')->on('grades')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

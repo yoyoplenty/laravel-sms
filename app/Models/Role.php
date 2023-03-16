@@ -12,9 +12,9 @@ class Role extends Model {
     protected $fillable = ['name'];
 
     /**
-     * A role belongs to a user
+     * A role belongs to many users
      */
-    public function user(): HasMany {
+    public function users(): HasMany {
         return $this->HasMany(User::class);
     }
 }

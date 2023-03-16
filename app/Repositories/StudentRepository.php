@@ -2,31 +2,55 @@
 
 namespace App\Repositories;
 
-use App\Exceptions\ErrorResponse;
+use Exception;
 use App\Models\Student;
+use Illuminate\Support\Str;
+use App\Exceptions\ErrorResponse;
+use App\Repositories\RoleRepository;
+use App\Repositories\GradeRepository;
 
 class StudentRepository extends BaseRepository {
 
     protected $model;
+    protected $userRepository;
+    protected $roleRepository;
+    protected $gradeRepository;
 
-    public function __construct(Student $model) {
+    public function __construct(Student $model, UserRepository $userRepository, RoleRepository $roleRepository, GradeRepository $gradeRepository) {
         parent::__construct($model);
 
         $this->model = $model;
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
+        $this->gradeRepository = $gradeRepository;
     }
 
     public function createStudent(array $data) {
-        $name = data_get($data, 'name');
+        try {
+            ['firstname' => $firstname, 'lastname' => $lastname, 'email' => $email, 'grade_id' => $gradeId, 'role_id' => $roleId] = $data;
+            $middlename = data_get($data, 'middlename');
 
-        $grade = $this->model::where('name', '=', $name)->first();
-        if ($grade) throw new ErrorResponse('grade with name already exist');
+            $this->roleRepository->findById($roleId);
+            $this->gradeRepository->findById($gradeId);
 
-        return $this->create($data);
+            $this->userRepository->getUserByEmail($email);
+            $this->userRepository->getUserByNames($firstname, $lastname, $middlename);
+
+            $user = $this->userRepository->createUser($data);
+
+            $data['student_id'] = Str::random(5);
+            $data['admission_date'] = date('Y-m-d H:i:s');
+            $data['user_id'] = $user->id;
+
+            return $this->create($data);
+        } catch (Exception $ex) {
+            throw new ErrorResponse($ex->getMessage());
+        }
     }
 
     public function findWithMissing($id) {
         $students = $this->findById($id);
 
-        return $students->loadMissing(['users', 'grades']);
+        return $students->loadMissing(['user', 'grade']);
     }
 }

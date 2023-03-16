@@ -13,4 +13,13 @@ class TeacherRepository extends BaseRepository {
 
         $this->model = $model;
     }
+
+    public function createTeacher(array $data) {
+    }
+
+    public function findWithMissing(Int $id) {
+        $teachers = $this->findById($id);
+
+        return $teachers->loadMissing(['user', 'grade']);
+    }
 }

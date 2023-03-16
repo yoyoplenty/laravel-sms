@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Teacher extends Model {
     use HasFactory;
 
+    protected $fillable = [];
+
     /**
      * Get the grade assigned to the teacher
      */
