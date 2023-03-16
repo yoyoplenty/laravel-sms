@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\ErrorResponse;
-use App\Models\Subject;
 use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
 use App\Http\Resources\SubjectResource;
@@ -62,8 +60,8 @@ class SubjectController extends Controller {
      * Remove the specified resource from storage.
      */
     public function destroy($id) {
-        $deletedSubject =  $this->subjectRepository->delete($id);
+        $this->subjectRepository->delete($id);
 
-        return new SubjectResource($deletedSubject);
+        return new SubjectResource(null);
     }
 }

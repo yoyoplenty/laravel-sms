@@ -6,15 +6,11 @@ use App\Models\Teacher;
 
 class TeacherRepository extends BaseRepository {
 
-    public function create(array $data) {
-        return Teacher::create($data);
-    }
+    protected $model;
 
-    public function update($teacher, array $data) {
-        return $teacher->update($data);
-    }
+    public function __construct(Teacher $model) {
+        parent::__construct($model);
 
-    public function delete($teacher) {
-        return $teacher->delete($teacher);
+        $this->model = $model;
     }
 }

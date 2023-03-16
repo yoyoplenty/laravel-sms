@@ -6,15 +6,11 @@ use App\Models\User;
 
 class UserRepository extends BaseRepository {
 
-    public function create(array $data) {
-        return User::create($data);
-    }
+    protected $model;
 
-    public function update($user, array $data) {
-        return $user->update($data);
-    }
+    public function __construct(User $model) {
+        parent::__construct($model);
 
-    public function delete($user) {
-        return $user->delete($user);
+        $this->model = $model;
     }
 }

@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Exceptions\ErrorResponse;
 use App\Models\Subject;
-use Exception;
 
 class SubjectRepository extends BaseRepository {
 
@@ -19,11 +18,17 @@ class SubjectRepository extends BaseRepository {
     }
 
     public function createSubject(array $data) {
-
+        $name = data_get($data, 'name');
+        $code = data_get($data, 'code');
         $gradeIds = data_get($data, 'grade_ids');
-        $grades = $this->gradeRepository->find($gradeIds);
 
-        $newSubject = $this->create($data)->grades()->attach($grades);
+        $subject = $this->model::where('name', '=', $name)->orWhere('code', '=', $code)->first();
+        if ($subject) throw new ErrorResponse('grade with name already exist');
+
+        $grades = !empty($gradeIds) ?? $this->gradeRepository->find($gradeIds);
+
+        $newSubject = $this->create($data);
+        $grades ?? $newSubject->grades()->attach($grades);
 
         return $newSubject;
     }
@@ -31,7 +36,6 @@ class SubjectRepository extends BaseRepository {
     public function findWithMissing($id) {
         $subjects = $this->findById($id);
 
-        if (!$subjects) throw new ErrorResponse('unable to find subjects');
         return $subjects->loadMissing('grades');
     }
 }

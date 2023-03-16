@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\ErrorResponse;
 use App\Models\Grade;
 
 class GradeRepository extends BaseRepository {
@@ -14,7 +15,12 @@ class GradeRepository extends BaseRepository {
         $this->model = $model;
     }
 
-    public function getAll() {
-        return $this->model->all();
+    public function createGrade(array $data) {
+        $name = data_get($data, 'name');
+
+        $grade = $this->model::where('name', '=', $name)->first();
+        if ($grade) throw new ErrorResponse('grade with name already exist');
+
+        return $this->create($data);
     }
 }

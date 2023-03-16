@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
@@ -10,11 +9,17 @@ use App\Repositories\StudentRepository;
 use Illuminate\Http\JsonResponse;
 
 class StudentController extends Controller {
+
+    protected $studentRepository;
+
+    public function __construct(studentRepository $repository) {
+        $this->studentRepository = $repository;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index() {
-        $allUsers = Student::query()->get();
+        $allUsers = $this->studentRepository->paginate();;
 
         return new JsonResponse([
             'message' => "successfully fetched all sgrades",
@@ -26,8 +31,8 @@ class StudentController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentRequest $request, StudentRepository $studentRepository) {
-        $createdStudent = $studentRepository->create($request->all());
+    public function store(StoreStudentRequest $request) {
+        $createdStudent =  $this->studentRepository->createStudent($request->all());
 
         return new StudentResource($createdStudent);
     }
@@ -35,8 +40,8 @@ class StudentController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show(Student $student) {
-        $studentDetails = $student->loadMissing(['users', 'grades']);
+    public function show($id) {
+        $studentDetails =  $this->studentRepository->findWithMissing($id);
 
         return new StudentResource($studentDetails);
     }
@@ -44,8 +49,8 @@ class StudentController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentRequest $request, Student $student, StudentRepository $studentRepository) {
-        $updatedStudent = $studentRepository->update($student, $request->all());
+    public function update(UpdateStudentRequest $request, $id) {
+        $updatedStudent = $this->studentRepository->update($id, $request->all());
 
         return new StudentResource($updatedStudent);
     }
@@ -53,9 +58,9 @@ class StudentController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student, StudentRepository $studentRepository) {
-        $deletedStudent = $studentRepository->delete($student);
+    public function destroy($id) {
+        $this->studentRepository->delete($id);
 
-        return new StudentResource($deletedStudent);
+        return new StudentResource(null);
     }
 }

@@ -20,7 +20,7 @@ class GradeController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $allGrades = $this->gradeRepository->getAll();
+        $allGrades = $this->gradeRepository->paginate();
 
         return new JsonResponse([
             'message' => "successfully fetched all sgrades",
@@ -33,7 +33,7 @@ class GradeController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store(StoreGradeRequest $request) {
-        $createdGrade = $this->gradeRepository->create($request->all());
+        $createdGrade = $this->gradeRepository->createGrade($request->all());
 
         return new GradeResource($createdGrade);
     }
@@ -60,8 +60,8 @@ class GradeController extends Controller {
      * Remove the specified resource from storage.
      */
     public function destroy($id) {
-        $deletedGrade =  $this->gradeRepository->delete($id);
+        $this->gradeRepository->delete($id);
 
-        return new GradeResource($deletedGrade);
+        return new GradeResource(null);
     }
 }

@@ -15,10 +15,12 @@ class BaseResource extends JsonResource {
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array {
+        $data = parent::toArray($request);
+
         return [
             'message' => 'request successful',
             'status' => $this->code,
-            'data' => parent::toArray($request) ?? parent::toArray($request)
+            'data' =>  $data ?? $data
         ];
     }
 }
