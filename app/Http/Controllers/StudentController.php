@@ -18,20 +18,20 @@ class StudentController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index() {
-        $allUsers = $this->studentRepository->paginate();;
+    public function index(): JsonResponse {
+        $allStudents = $this->studentRepository->paginate();
 
         return new JsonResponse([
-            'message' => "successfully fetched all sgrades",
+            'message' => "successfully fetched all students",
             "status" => 200,
-            "data" => $allUsers
+            "data" => $allStudents
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentRequest $request) {
+    public function store(StoreStudentRequest $request): StudentResource {
         $createdStudent =  $this->studentRepository->createStudent($request->all());
 
         return new StudentResource($createdStudent);
@@ -40,7 +40,7 @@ class StudentController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show($id) {
+    public function show($id): StudentResource {
         $studentDetails =  $this->studentRepository->findWithMissing($id);
 
         return new StudentResource($studentDetails);
@@ -49,7 +49,7 @@ class StudentController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentRequest $request, $id) {
+    public function update(UpdateStudentRequest $request, $id): StudentResource {
         $updatedStudent = $this->studentRepository->update($id, $request->all());
 
         return new StudentResource($updatedStudent);
@@ -58,7 +58,7 @@ class StudentController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {
+    public function destroy($id): StudentResource {
         $this->studentRepository->delete($id);
 
         return new StudentResource(null);
