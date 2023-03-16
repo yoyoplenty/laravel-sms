@@ -18,6 +18,9 @@ Route::prefix('v1')->group(function () {
     require __DIR__ . '/api/roles.php';
     require __DIR__ . '/api/users.php';
     require __DIR__ . '/api/grades.php';
+    require __DIR__ . '/api/subjects.php';
+    require __DIR__ . '/api/students.php';
+    require __DIR__ . '/api/teachers.php';
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

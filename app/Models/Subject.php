@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Subject extends Model {
     use HasFactory;
 
+    protected $fillable = ['name', 'code'];
+
     /**
-     * The subject is taken by many grades
+     * The subject is taken by many grades(class)
      */
     public function grades(): BelongsToMany {
-        return $this->belongsToMany(Grade::class);
+        return $this->belongsToMany(Grade::class,);
     }
 
     /**

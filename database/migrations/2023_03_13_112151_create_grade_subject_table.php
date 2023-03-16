@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('grade_id');
             $table->unsignedBigInteger('subject_id');
 
-            $table->foreign('grade_id')->on('grades')->references('id');
-            $table->foreign('subject_id')->on('subjects')->references('id');
+            $table->foreign('grade_id')->on('grades')->references('id')->onDelete('cascade');
+            $table->foreign('subject_id')->on('subjects')->references('id')->onDelete('cascade');
 
             $table->timestamps();
         });

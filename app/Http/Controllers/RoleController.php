@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleResource;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RoleController extends Controller {
@@ -12,9 +13,13 @@ class RoleController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $roles = Role::paginate();
+        $allRoles = Role::paginate();
 
-        return new JsonResponse($roles);
+        return new JsonResponse([
+            'message' => "successfully fetched roles",
+            "status" => 200,
+            "data" => $allRoles
+        ]);
     }
 
     /**
@@ -23,14 +28,14 @@ class RoleController extends Controller {
     public function store(StoreRoleRequest $request) {
         $newRole = Role::create($request->only(['name']));
 
-        return new JsonResponse($newRole);
+        return new RoleResource($newRole);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Role $role) {
-        return new JsonResponse($role);
+        return new RoleResource($role);
     }
 
     /**
@@ -39,13 +44,15 @@ class RoleController extends Controller {
     public function update(UpdateRoleRequest $request, Role $role) {
         $updatedRole = $role->update($request->all());
 
-        return new JsonResponse($updatedRole);
+        return new RoleResource($updatedRole);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Role $role) {
-        return $role->delete();
+        $deletedRole =  $role->delete();
+
+        return new RoleResource($deletedRole);
     }
 }

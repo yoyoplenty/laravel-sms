@@ -6,15 +6,15 @@ use App\Models\Grade;
 
 class GradeRepository extends BaseRepository {
 
-    public function create(array $data) {
-        return Grade::create($data);
+    protected $model;
+
+    public function __construct(Grade $model) {
+        parent::__construct($model);
+
+        $this->model = $model;
     }
 
-    public function update($grade, array $data) {
-        return $grade->update($data);
-    }
-
-    public function delete($grade) {
-        return $grade->delete($grade);
+    public function getAll() {
+        return $this->model->all();
     }
 }

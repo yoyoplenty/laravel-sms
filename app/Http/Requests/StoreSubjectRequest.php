@@ -9,7 +9,7 @@ class StoreSubjectRequest extends FormRequest {
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool {
-        return false;
+        return true;
     }
 
     /**
@@ -19,7 +19,10 @@ class StoreSubjectRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            //
+            "name" => "required|string",
+            "code" => "required|integer",
+            'grade_ids' => 'sometimes|array',
+            'grade_ids.*' => 'required|integer|distinct'
         ];
     }
 }
