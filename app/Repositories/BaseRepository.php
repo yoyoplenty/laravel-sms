@@ -62,6 +62,17 @@ class BaseRepository implements BaseInterface {
         }
     }
 
+    public function getByName($name) {
+        try {
+            $data = $this->model::where('name', '=', $name)->first();
+            if ($data) throw new ErrorResponse($this->name . ' with name already exist');
+
+            return $data;
+        } catch (Exception $ex) {
+            throw new ErrorResponse($ex->getMessage());
+        }
+    }
+
     public function update($id, $data) {
         try {
             $entity = $this->model->find($id);

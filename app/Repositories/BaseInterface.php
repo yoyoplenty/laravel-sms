@@ -9,6 +9,7 @@ interface BaseInterface {
     public function findAll();
     public function find($query);
     public function findById($id);
+    public function getByName($name);
     public function update($id, $data);
     public function delete($id);
 }

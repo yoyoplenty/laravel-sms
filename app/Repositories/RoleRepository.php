@@ -18,8 +18,7 @@ class RoleRepository extends BaseRepository {
     public function createRole(array $data) {
         $name = data_get($data, 'name');
 
-        $role = $this->model::where('name', '=', $name)->first();
-        if ($role) throw new ErrorResponse('role with name already exist');
+        $this->getByName($name);
 
         return $this->create($data);
     }
