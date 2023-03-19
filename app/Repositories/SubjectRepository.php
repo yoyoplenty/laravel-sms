@@ -11,7 +11,7 @@ class SubjectRepository extends BaseRepository {
     protected $gradeRepository;
 
     public function __construct(Subject $model, GradeRepository $gradeRepository) {
-        parent::__construct($model);
+        parent::__construct($model, 'Subject');
 
         $this->model = $model;
         $this->gradeRepository = $gradeRepository;
@@ -23,12 +23,15 @@ class SubjectRepository extends BaseRepository {
         $gradeIds = data_get($data, 'grade_ids');
 
         $subject = $this->model::where('name', '=', $name)->orWhere('code', '=', $code)->first();
-        if ($subject) throw new ErrorResponse('grade with name already exist');
+        if ($subject) throw new ErrorResponse('subject already exist');
 
-        $grades = !empty($gradeIds) ?? $this->gradeRepository->find($gradeIds);
+        $grades = $gradeIds ? array_map(function ($gradeId) {
+            $grade = $this->gradeRepository->findById($gradeId);
+            return $grade->id;
+        }, $gradeIds) : null;
 
         $newSubject = $this->create($data);
-        $grades ?? $newSubject->grades()->attach($grades);
+        $grades ? $newSubject->grades()->attach($grades) : null;
 
         return $newSubject;
     }

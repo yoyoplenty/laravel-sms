@@ -6,34 +6,27 @@ use Exception;
 use App\Models\Student;
 use Illuminate\Support\Str;
 use App\Exceptions\ErrorResponse;
-use App\Repositories\RoleRepository;
 use App\Repositories\GradeRepository;
 
 class StudentRepository extends BaseRepository {
 
     protected $model;
     protected $userRepository;
-    protected $roleRepository;
     protected $gradeRepository;
 
-    public function __construct(Student $model, UserRepository $userRepository, RoleRepository $roleRepository, GradeRepository $gradeRepository) {
-        parent::__construct($model);
+    public function __construct(Student $model, UserRepository $userRepository, GradeRepository $gradeRepository) {
+        parent::__construct($model, 'Student');
 
         $this->model = $model;
         $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
         $this->gradeRepository = $gradeRepository;
     }
 
     public function createStudent(array $data) {
         try {
-            ['firstname' => $firstname, 'lastname' => $lastname, 'email' => $email, 'grade_id' => $gradeId, 'role_id' => $roleId] = $data;
+            ['firstname' => $firstname, 'lastname' => $lastname, 'email' => $email] = $data;
             $middlename = data_get($data, 'middlename');
 
-            $this->roleRepository->findById($roleId);
-            $this->gradeRepository->findById($gradeId);
-
-            $this->userRepository->getUserByEmail($email);
             $this->userRepository->getUserByNames($firstname, $lastname, $middlename);
 
             $user = $this->userRepository->createUser($data);
@@ -49,8 +42,12 @@ class StudentRepository extends BaseRepository {
     }
 
     public function findWithMissing($id) {
-        $students = $this->findById($id);
+        try {
+            $students = $this->findById($id);
 
-        return $students->loadMissing(['user', 'grade']);
+            return $students->loadMissing(['user', 'grade']);
+        } catch (Exception $ex) {
+            throw new ErrorResponse($ex->getMessage());
+        }
     }
 }

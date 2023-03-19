@@ -9,9 +9,11 @@ use Exception;
 class BaseRepository implements BaseInterface {
 
     protected $model;
+    protected $name;
 
-    public function __construct($model) {
+    public function __construct($model, $name) {
         $this->model = $model;
+        $this->name = $name;
     }
 
     public function create($data) {
@@ -41,7 +43,7 @@ class BaseRepository implements BaseInterface {
     public function find($query) {
         try {
             $data = $this->model->find($query);
-            if (!$data) throw new ErrorResponse('data not found');
+            if (!$data) throw new ErrorResponse($this->name  . ' not found');
 
             return $data;
         } catch (Exception $ex) {
@@ -52,7 +54,7 @@ class BaseRepository implements BaseInterface {
     public function findById($id) {
         try {
             $data = $this->model->find($id);
-            if (!$data) throw new ErrorResponse('data not found');
+            if (!$data | $data == false) throw new ErrorResponse($this->name  . ' not found');
 
             return $data;
         } catch (Exception $ex) {
@@ -63,7 +65,7 @@ class BaseRepository implements BaseInterface {
     public function update($id, $data) {
         try {
             $entity = $this->model->find($id);
-            if (!$entity) throw new ErrorResponse('data not found');
+            if (!$entity) throw new ErrorResponse($this->name  . ' not found');
 
             $entity->update($data);
             return $entity;
@@ -75,7 +77,7 @@ class BaseRepository implements BaseInterface {
     public function delete($id) {
         try {
             $data = $this->model->find($id);
-            if (!$data) throw new ErrorResponse('data not found');
+            if (!$data) throw new ErrorResponse($this->name  . ' not found');
 
 
             return $data->delete();

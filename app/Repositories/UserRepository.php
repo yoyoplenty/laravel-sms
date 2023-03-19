@@ -12,7 +12,7 @@ class UserRepository extends BaseRepository {
     protected $model;
 
     public function __construct(User $model) {
-        parent::__construct($model);
+        parent::__construct($model, 'User');
 
         $this->model = $model;
     }
@@ -27,7 +27,7 @@ class UserRepository extends BaseRepository {
     public function getUserByEmail($email) {
         try {
             $user = $this->model::where('email', '=', $email)->first();
-            if ($user) throw new ErrorResponse('user already exist');
+            if ($user) throw new ErrorResponse('user with email already exist');
 
             return $user;
         } catch (Exception $ex) {

@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('student_id');
-            $table->date('admission_date');
+            $table->dateTime('admission_date');
             $table->foreignId('user_id');
             $table->foreignId('grade_id');
 
