@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Repositories\GradeRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\SubjectRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,15 +13,18 @@ class StoreUserRequest extends FormRequest {
     protected $roleRepository;
     protected $userRepository;
     protected $gradeRepository;
+    protected $subjectRepository;
 
     public function __construct(
+        UserRepository $userRepository,
         RoleRepository $roleRepository,
         GradeRepository $gradeRepository,
-        UserRepository $userRepository
+        SubjectRepository $subjectRepository,
     ) {
-        $this->roleRepository = $roleRepository;
         $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
         $this->gradeRepository = $gradeRepository;
+        $this->subjectRepository = $subjectRepository;
     }
 
     /**
@@ -60,6 +64,14 @@ class StoreUserRequest extends FormRequest {
                     $this->gradeRepository->findById($value);
                 }
             ],
+            'subject_ids' => 'sometimes|array',
+            'subject_ids.*' => [
+                'required', 'integer', 'distinct',
+                function ($attributes, $value, $fail) {
+                    $this->subjectRepository->findById($value);
+                    dd($value);
+                }
+            ]
         ];
     }
 }

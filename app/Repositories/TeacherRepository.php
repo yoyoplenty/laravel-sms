@@ -37,18 +37,13 @@ class TeacherRepository extends BaseRepository {
 
             $this->userRepository->getUserByNames($firstname, $lastname, $middlename);
 
-            $subjects = $subjectIds ? array_map(function ($subjectId) {
-                $subject = $this->subjectRepository->findById($subjectId);
-                return $subject->id;
-            }, $subjectIds) : null;
-
             $user = $this->userRepository->createUser($data);
 
             $data['staff_id'] = Str::random(5);
             $data['user_id'] = $user->id;
 
             $newTeacher = $this->create($data);
-            $subjects ? $newTeacher->subjects()->attach($subjects) : null;
+            $subjectIds ? $newTeacher->subjects()->attach($subjectIds) : null;
 
             return $newTeacher;
         } catch (Exception $ex) {

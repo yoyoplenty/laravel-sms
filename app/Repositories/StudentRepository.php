@@ -24,7 +24,7 @@ class StudentRepository extends BaseRepository {
 
     public function createStudent(array $data) {
         try {
-            ['firstname' => $firstname, 'lastname' => $lastname, 'email' => $email] = $data;
+            ['firstname' => $firstname, 'lastname' => $lastname] = $data;
             $middlename = data_get($data, 'middlename');
 
             $this->userRepository->getUserByNames($firstname, $lastname, $middlename);

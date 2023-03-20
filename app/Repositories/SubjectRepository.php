@@ -25,13 +25,8 @@ class SubjectRepository extends BaseRepository {
         $subject = $this->model::where('name', '=', $name)->orWhere('code', '=', $code)->first();
         if ($subject) throw new ErrorResponse('subject already exist');
 
-        $grades = $gradeIds ? array_map(function ($gradeId) {
-            $grade = $this->gradeRepository->findById($gradeId);
-            return $grade->id;
-        }, $gradeIds) : null;
-
         $newSubject = $this->create($data);
-        $grades ? $newSubject->grades()->attach($grades) : null;
+        $gradeIds ? $newSubject->grades()->attach($gradeIds) : null;
 
         return $newSubject;
     }

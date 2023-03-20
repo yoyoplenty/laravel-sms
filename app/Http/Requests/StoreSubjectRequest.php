@@ -2,9 +2,17 @@
 
 namespace App\Http\Requests;
 
+use App\Repositories\GradeRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSubjectRequest extends FormRequest {
+
+    protected $gradeRepository;
+
+    public function __construct(GradeRepository $gradeRepository) {
+        $this->gradeRepository = $gradeRepository;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,7 +30,12 @@ class StoreSubjectRequest extends FormRequest {
             "name" => "required|string",
             "code" => "required|integer",
             'grade_ids' => 'sometimes|array',
-            'grade_ids.*' => 'required|integer|distinct'
+            'grade_ids.*' => [
+                'required', 'integer', 'distinct',
+                function ($attributes, $value, $fail) {
+                    $this->gradeRepository->findById($value);
+                }
+            ]
         ];
     }
 }
