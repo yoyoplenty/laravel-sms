@@ -6,14 +6,15 @@ use App\Http\Requests\StoreGradeRequest;
 use App\Http\Requests\UpdateGradeRequest;
 use App\Http\Resources\GradeResource;
 use App\Repositories\GradeRepository;
-use Illuminate\Http\JsonResponse;
 
-class GradeController extends Controller {
+class GradeController extends BaseController {
 
     protected $gradeRepository;
 
     public function __construct(GradeRepository $repository) {
         $this->gradeRepository = $repository;
+
+        $this->middleware('auth:sanctum');
     }
 
     /**
@@ -22,11 +23,10 @@ class GradeController extends Controller {
     public function index() {
         $allGrades = $this->gradeRepository->paginate();
 
-        return new JsonResponse([
-            'message' => "successfully fetched all sgrades",
-            "status" => 200,
-            "data" => $allGrades
-        ]);
+        return $this->sendResponse(
+            GradeResource::collection($allGrades),
+            "successfully fetched grades"
+        );
     }
 
     /**
@@ -35,7 +35,10 @@ class GradeController extends Controller {
     public function store(StoreGradeRequest $request) {
         $createdGrade = $this->gradeRepository->createGrade($request->all());
 
-        return new GradeResource($createdGrade);
+        return $this->sendResponse(
+            new GradeResource($createdGrade),
+            "successfully created grade"
+        );
     }
 
     /**
@@ -44,7 +47,7 @@ class GradeController extends Controller {
     public function show($id) {
         $grade = $this->gradeRepository->findById($id);
 
-        return new GradeResource($grade);
+        return $this->sendResponse(new GradeResource($grade));
     }
 
     /**
@@ -53,7 +56,7 @@ class GradeController extends Controller {
     public function update(UpdateGradeRequest $request, $id) {
         $updatedGrade = $this->gradeRepository->update($id, $request->all());
 
-        return new GradeResource($updatedGrade);
+        return $this->sendResponse(new GradeResource($updatedGrade));
     }
 
     /**
@@ -62,6 +65,6 @@ class GradeController extends Controller {
     public function destroy($id) {
         $this->gradeRepository->delete($id);
 
-        return new GradeResource(null);
+        return $this->sendResponse(null, 'Deleted successfully');
     }
 }

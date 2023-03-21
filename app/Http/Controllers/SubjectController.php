@@ -6,14 +6,16 @@ use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
 use App\Http\Resources\SubjectResource;
 use App\Repositories\SubjectRepository;
-use Illuminate\Http\JsonResponse;
 
-class SubjectController extends Controller {
+class SubjectController extends BaseController {
 
     protected $subjectRepository;
 
     public function __construct(SubjectRepository $repository) {
         $this->subjectRepository = $repository;
+
+        // $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth:sanctum');
     }
 
     /**
@@ -22,11 +24,10 @@ class SubjectController extends Controller {
     public function index() {
         $allSubjects = $this->subjectRepository->paginate();
 
-        return new JsonResponse([
-            'message' => "successfully fetched subjects",
-            "status" => 200,
-            "data" => $allSubjects
-        ]);
+        return $this->sendResponse(
+            SubjectResource::collection($allSubjects),
+            "successfully fetched subjects"
+        );
     }
 
     /**
@@ -35,7 +36,10 @@ class SubjectController extends Controller {
     public function store(StoreSubjectRequest $request) {
         $createdSubject = $this->subjectRepository->createSubject($request->all());
 
-        return new SubjectResource($createdSubject);
+        return $this->sendResponse(
+            new SubjectResource($createdSubject),
+            "successfully created subject"
+        );
     }
 
     /**
@@ -44,7 +48,7 @@ class SubjectController extends Controller {
     public function show($id) {
         $subjectWithGrades =  $this->subjectRepository->findWithMissing($id);
 
-        return new SubjectResource($subjectWithGrades);
+        return $this->sendResponse(new SubjectResource($subjectWithGrades));
     }
 
     /**
@@ -53,7 +57,7 @@ class SubjectController extends Controller {
     public function update(UpdateSubjectRequest $request, $id) {
         $updatedSubject = $this->subjectRepository->update($id, $request->all());
 
-        return new SubjectResource($updatedSubject);
+        return $this->sendResponse(new SubjectResource($updatedSubject));
     }
 
     /**
@@ -62,6 +66,6 @@ class SubjectController extends Controller {
     public function destroy($id) {
         $this->subjectRepository->delete($id);
 
-        return new SubjectResource(null);
+        return $this->sendResponse(null, 'Deleted successfully');
     }
 }

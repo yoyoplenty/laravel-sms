@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->foreignId('role_id');
             $table->string('confirm_token')->nullable();
             $table->string('reset_token')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

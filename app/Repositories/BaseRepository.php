@@ -62,6 +62,17 @@ class BaseRepository implements BaseInterface {
         }
     }
 
+    public function findByField($field, $value) {
+        try {
+            $data = $this->model::where($field, '=', $value)->first();
+            if (!$data | $data == false) throw new ErrorResponse($this->name  . ' not found');
+
+            return $data;
+        } catch (Exception $ex) {
+            throw new ErrorResponse($ex->getMessage());
+        }
+    }
+
     public function getByName($name) {
         try {
             $data = $this->model::where('name', '=', $name)->first();

@@ -7,20 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class BaseResource extends JsonResource {
 
-    protected $code = 200;
-
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array {
-        $data = parent::toArray($request);
-
-        return [
-            'message' => 'request successful',
-            'status' => $this->code,
-            'data' =>  $data ?? $data
-        ];
+        return parent::toArray($request);
     }
 }

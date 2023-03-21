@@ -6,9 +6,8 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Repositories\RoleRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
-class RoleController extends Controller {
+class RoleController extends BaseController {
 
     protected $roleRepository;
 
@@ -22,11 +21,10 @@ class RoleController extends Controller {
     public function index() {
         $allRoles = $this->roleRepository->paginate();
 
-        return new JsonResponse([
-            'message' => "successfully fetched roles",
-            "status" => 200,
-            "data" => $allRoles
-        ]);
+        return $this->sendResponse(
+            RoleResource::collection($allRoles),
+            "successfully fetched roles"
+        );
     }
 
     /**
@@ -35,7 +33,10 @@ class RoleController extends Controller {
     public function store(StoreRoleRequest $request) {
         $createdRole = $this->roleRepository->createRole($request->only(['name']));
 
-        return new RoleResource($createdRole);
+        return $this->sendResponse(
+            new RoleResource($createdRole),
+            "successfully created role"
+        );
     }
 
     /**
@@ -44,7 +45,7 @@ class RoleController extends Controller {
     public function show($id) {
         $role = $this->roleRepository->findById($id);
 
-        return new roleResource($role);
+        return $this->sendResponse(new roleResource($role));
     }
 
     /**
@@ -53,7 +54,7 @@ class RoleController extends Controller {
     public function update(UpdateRoleRequest $request, $id) {
         $updatedRole = $this->roleRepository->update($id, $request->all());
 
-        return new RoleResource($updatedRole);
+        return $this->sendResponse(new RoleResource($updatedRole));
     }
 
     /**
@@ -62,6 +63,6 @@ class RoleController extends Controller {
     public function destroy($id) {
         $this->roleRepository->delete($id);
 
-        return new RoleResource(null);
+        return $this->sendResponse(new RoleResource(null));
     }
 }
