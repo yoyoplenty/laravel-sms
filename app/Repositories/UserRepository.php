@@ -4,8 +4,10 @@ namespace App\Repositories;
 
 use Exception;
 use App\Models\User;
+use Ramsey\Uuid\Uuid;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 
 class UserRepository extends BaseRepository {
 
@@ -19,7 +21,12 @@ class UserRepository extends BaseRepository {
 
     public function createUser(array $data) {
         ['password' => $password] = $data;
+
+        $data['uuid'] = Uuid::uuid4();
         $data['password'] = Hash::make($password);
+
+        $hashed = Crypt::encryptString($data['uuid']);
+        dump($hashed);
 
         return $this->create($data);
     }

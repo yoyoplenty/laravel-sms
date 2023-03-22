@@ -15,12 +15,11 @@ return new class extends Migration {
             $table->string('lastname');
             $table->string('middlename')->nullable();
             $table->string('email')->unique();
+            $table->uuid('uuid')->unique();
             $table->string('password');
             $table->boolean('is_active')->default(false);
             $table->foreignId('role_id');
-            $table->string('confirm_token')->nullable();
             $table->string('reset_token')->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
