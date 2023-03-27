@@ -16,6 +16,7 @@ class UserController extends Controller {
         $this->userRepository = $repository;
 
         $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('admin', ['only' => ['index']]);
     }
 
     /** 
