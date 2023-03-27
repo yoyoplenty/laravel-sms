@@ -14,7 +14,8 @@ class TeacherController extends BaseController {
     public function __construct(TeacherRepository $repository) {
         $this->teacherRepository = $repository;
 
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('admin', ['only' => ['store']]);
     }
     /**
      * Display a listing of the resource.

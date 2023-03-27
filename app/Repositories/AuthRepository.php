@@ -22,7 +22,7 @@ class AuthRepository {
         try {
             return $this->userRepository->createUser($data);
         } catch (Exception $ex) {
-            throw new ErrorResponse('unable to register user');
+            throw new ErrorResponse($ex->getMessage());
         }
     }
 

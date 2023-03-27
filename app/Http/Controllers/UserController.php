@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class UserController extends Controller {
 
@@ -15,6 +14,8 @@ class UserController extends Controller {
 
     public function __construct(UserRepository $repository) {
         $this->userRepository = $repository;
+
+        $this->middleware('auth', ['except' => ['store']]);
     }
 
     /** 

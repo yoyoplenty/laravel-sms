@@ -14,8 +14,8 @@ class SubjectController extends BaseController {
     public function __construct(SubjectRepository $repository) {
         $this->subjectRepository = $repository;
 
-        // $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth');
+        $this->middleware('admin', ['except' => ['index', 'show']]);
     }
 
     /**

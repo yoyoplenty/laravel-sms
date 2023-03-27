@@ -17,7 +17,7 @@ class AuthController extends BaseController {
     public function __construct(AuthRepository $repository) {
         $this->authRepository = $repository;
 
-        // $this->middleware('auth:sanctum');
+        $this->middleware('auth', ['only' => ['logout']]);
     }
 
     public function register(RegisterRequest $request) {

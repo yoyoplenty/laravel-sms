@@ -14,7 +14,8 @@ class GradeController extends BaseController {
     public function __construct(GradeRepository $repository) {
         $this->gradeRepository = $repository;
 
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth');
+        $this->middleware('admin', ['except' => ['index', 'show']]);
     }
 
     /**
