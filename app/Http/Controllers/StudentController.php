@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreStudentRequest;
-use App\Http\Requests\UpdateStudentRequest;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\StudentResource;
 use App\Repositories\StudentRepository;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
+use App\Http\Traits\GateTraits;
+
+/**
+ * * @OA\Tag(
+ *     name="Students",
+ *     description="API Endpoints for Students"
+ * )
+ */
 
 class StudentController extends BaseController {
+    use GateTraits;
 
     protected $studentRepository;
 
@@ -16,9 +27,29 @@ class StudentController extends BaseController {
 
         $this->middleware('auth', ['except' => ['store']]);
     }
+
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *      path="/students",
+     *      operationId="getProjectsList",
+     *      tags={"Students"},
+     *      summary="Get list of all students",
+     *      description="Returns list of all students",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
+
     public function index() {
         $allStudents = $this->studentRepository->paginate();
 
@@ -53,6 +84,8 @@ class StudentController extends BaseController {
      * Update the specified resource in storage.
      */
     public function update(UpdateStudentRequest $request, $id) {
+        $this->authorizeUser($this->studentRepository, $id);
+
         $updatedStudent = $this->studentRepository->update($id, $request->all());
 
         return $this->sendResponse(new StudentResource($updatedStudent));

@@ -16,6 +16,6 @@ class TeacherRole {
         $teacherRole = config('global.teacherRole');
 
         if (auth()->user()->role_id === $teacherRole)  return $next($request);
-        else return response()->json(['message' => 'Unauthorized', 'success' => false], 401);
+        else return response()->json(['message' => 'Unauthorized', 'success' => false], 403);
     }
 }

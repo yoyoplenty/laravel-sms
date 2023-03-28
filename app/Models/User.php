@@ -3,11 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable {
     use HasApiTokens, HasFactory, Notifiable;
@@ -38,6 +40,20 @@ class User extends Authenticatable {
         'email_verified_at' => 'datetime',
     ];
 
+    public function isAdmin(): bool {
+        if ($this->role_id === 1) return true;
+
+        else return false;
+    }
+
+    public function hasRole($roleName): bool {
+        $name = Str::ucfirst($roleName);
+        $role = Role::where('name', '=', $name)->first();
+
+        if ($role && $this->role_id === $role->id) return true;
+
+        else return false;
+    }
 
     /**
      * A user has one role

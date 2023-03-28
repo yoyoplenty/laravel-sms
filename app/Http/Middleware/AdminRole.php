@@ -16,6 +16,6 @@ class AdminRole {
         $adminRole = config('global.adminRole');
 
         if (auth()->user()->role_id === $adminRole)  return $next($request);
-        else return response()->json(['message' => 'Unauthorized', 'success' => false], 401);
+        else return response()->json(['message' => 'Unauthorized', 'success' => false], 403);
     }
 }
