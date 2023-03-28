@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\UserCreated;
 use Exception;
 use App\Models\User;
 use Ramsey\Uuid\Uuid;
@@ -26,9 +27,11 @@ class UserRepository extends BaseRepository {
         $data['password'] = Hash::make($password);
 
         $hashed = Crypt::encryptString($data['uuid']);
-        dump($hashed);
 
-        return $this->create($data);
+        $createdUser = $this->create($data);
+        event(new UserCreated($createdUser, $hashed));
+
+        return $createdUser;
     }
 
     public function getUserByEmail($email) {

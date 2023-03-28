@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\StudentResource;
 use App\Repositories\StudentRepository;
 use App\Http\Requests\StoreStudentRequest;
