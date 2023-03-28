@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Events\UserCreated;
+use App\Events\UserResetPassword;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
@@ -72,7 +74,8 @@ class AuthRepository {
             $user->update(['uuid' => Uuid::uuid4()]);
             $hashed = Crypt::encryptString($user->uuid);
 
-            dump($hashed);
+            event(new UserCreated($user, $hashed));
+
             return $user;
         } catch (Exception $ex) {
             throw new ErrorResponse($ex->getMessage());
@@ -87,7 +90,8 @@ class AuthRepository {
             $user->update(['reset_token' => Uuid::uuid4()]);
             $hashed = Crypt::encryptString($user->reset_token);
 
-            dump($hashed);
+            event(new UserResetPassword($user, $hashed));
+
             return $user;
         } catch (Exception $ex) {
             throw new ErrorResponse($ex->getMessage());
