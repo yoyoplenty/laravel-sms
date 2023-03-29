@@ -17,7 +17,7 @@ class UserController extends Controller {
         $this->userRepository = $repository;
 
         $this->middleware('auth', ['except' => ['store']]);
-        $this->middleware('admin', ['only' => ['index']]);
+        $this->middleware('role:admin', ['only' => ['index']]);
     }
 
     /** 
@@ -37,7 +37,7 @@ class UserController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store(StoreUserRequest $request): UserResource {
-        $user = $this->userRepository->create($request->all());
+        $user = $this->userRepository->createUser($request->all());
 
         return new UserResource($user);
     }

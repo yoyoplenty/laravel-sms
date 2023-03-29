@@ -26,7 +26,44 @@
                 ],
                 "summary": "Get list of all students",
                 "description": "Returns list of all students",
-                "operationId": "getProjectsList",
+                "operationId": "getStudents",
+                "responses": {
+                    "200": {
+                        "description": "successfully fetched students",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateStudent"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Create a new student",
+                "description": "Create a new student",
+                "operationId": "createStudent",
+                "requestBody": {
+                    "description": "Create student request body",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateStudent"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -38,6 +75,31 @@
                         "description": "Forbidden"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateStudent": {
+                "required": [
+                    "user_id",
+                    "grade_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "id of the student",
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "description": "user id",
+                        "type": "integer"
+                    },
+                    "grade_id": {
+                        "description": "user id",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
             }
         }
     },

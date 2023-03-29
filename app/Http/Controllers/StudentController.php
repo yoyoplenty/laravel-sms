@@ -24,18 +24,20 @@ class StudentController extends BaseController {
         $this->studentRepository = $repository;
 
         $this->middleware('auth', ['except' => ['store']]);
+        $this->middleware('role:student,admin,teacher');
     }
 
     /**
      * @OA\Get(
      *      path="/students",
-     *      operationId="getProjectsList",
+     *      operationId="getStudents",
      *      tags={"Students"},
      *      summary="Get list of all students",
      *      description="Returns list of all students",
      *      @OA\Response(
      *          response=200,
-     *          description="Successful operation",
+     *          description="successfully fetched students",
+     *          @OA\JsonContent(ref="#/components/schemas/CreateStudent")
      *       ),
      *      @OA\Response(
      *          response=401,
@@ -45,7 +47,7 @@ class StudentController extends BaseController {
      *          response=403,
      *          description="Forbidden"
      *      )
-     *     )
+     * )
      */
 
     public function index() {
@@ -58,8 +60,32 @@ class StudentController extends BaseController {
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *      path="/students",
+     *      operationId="createStudent",
+     *      tags={"Students"},
+     *      summary="Create a new student",
+     *      description="Create a new student",
+     *      @OA\RequestBody(
+     *         description="Create student request body",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/CreateStudent")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
      */
+
     public function store(StoreStudentRequest $request) {
         $createdStudent =  $this->studentRepository->createStudent($request->all());
 

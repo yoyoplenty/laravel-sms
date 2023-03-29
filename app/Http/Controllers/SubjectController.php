@@ -15,7 +15,7 @@ class SubjectController extends BaseController {
         $this->subjectRepository = $repository;
 
         $this->middleware('auth');
-        $this->middleware('admin', ['except' => ['index', 'show']]);
+        $this->middleware('role:admin,teacher', ['except' => ['index', 'show']]);
     }
 
     /**

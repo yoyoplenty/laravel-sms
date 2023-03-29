@@ -20,11 +20,11 @@ class AuthController extends BaseController {
         $this->middleware('auth', ['only' => ['logout']]);
     }
 
-    public function register(RegisterRequest $request) {
-        $registeredUser = $this->authRepository->signUp($request->all());
+    // public function register(RegisterRequest $request) {
+    //     $registeredUser = $this->authRepository->signUp($request->all());
 
-        return $this->sendResponse(new UserResource($registeredUser), 'successfully registered user');
-    }
+    //     return $this->sendResponse(new UserResource($registeredUser), 'successfully registered user');
+    // }
 
     public function signin(LoginRequest $request) {
         $details = $this->authRepository->signIn($request->all());

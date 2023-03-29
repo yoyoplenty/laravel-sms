@@ -15,7 +15,7 @@ class GradeController extends BaseController {
         $this->gradeRepository = $repository;
 
         $this->middleware('auth');
-        $this->middleware('role:student,admin', ['except' => ['index', 'show']]);
+        $this->middleware('role:admin', ['except' => ['show']]);
     }
 
     /**

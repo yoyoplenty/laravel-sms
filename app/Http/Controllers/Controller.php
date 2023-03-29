@@ -24,6 +24,15 @@ use Illuminate\Routing\Controller as BaseController;
  *      url=L5_SWAGGER_CONST_HOST,
  *      description="Demo API Server"
  * )
+ * 
+ * @OA\Schema(
+ *         schema="CreateStudent",
+ *         required={"user_id","grade_id",},
+ *         @OA\Property(property="id",description="id of the student",type="integer"),
+ *         @OA\Property(property="user_id",description="user id",type="integer"),
+ *         @OA\Property(property="grade_id",description="user id",type="integer"),
+ * )
+ * 
  */
 class Controller extends BaseController {
 

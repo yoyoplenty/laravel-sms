@@ -14,7 +14,8 @@ class RoleController extends BaseController {
     public function __construct(RoleRepository $repository) {
         $this->roleRepository = $repository;
 
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth');
+        $this->middleware('role:admin');
     }
 
     /**

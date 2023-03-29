@@ -6,11 +6,13 @@ return [
 
     'userType' => ['Guest', 'User', 'Student', 'Teacher', 'Admin'],
 
-    'adminRole' => 1,
+    'Roles' => [
+        'adminRole' => 1,
 
-    'teacherRole' => 2,
+        'teacherRole' => 2,
 
-    'studentRole' => 3,
+        'studentRole' => 3,
 
-    'guestRole' => 4,
+        'guestRole' => 4,
+    ],
 ];

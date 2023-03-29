@@ -15,7 +15,8 @@ class TeacherController extends BaseController {
         $this->teacherRepository = $repository;
 
         $this->middleware('auth', ['except' => ['store']]);
-        $this->middleware('admin', ['only' => ['store']]);
+        $this->middleware('role:admin', ['only' => ['store']]);
+        $this->middleware('role:admin,teacher');
     }
     /**
      * Display a listing of the resource.

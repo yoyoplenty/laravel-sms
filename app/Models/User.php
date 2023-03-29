@@ -41,7 +41,7 @@ class User extends Authenticatable {
     ];
 
     public function isAdmin(): bool {
-        if ($this->role_id === 1) return true;
+        if ($this->role_id === config('global.Roles')['adminRole']) return true;
 
         else return false;
     }
@@ -51,7 +51,6 @@ class User extends Authenticatable {
         $role = Role::where('name', '=', $name)->first();
 
         if ($role && $this->role_id === $role->id) return true;
-
         else return false;
     }
 
