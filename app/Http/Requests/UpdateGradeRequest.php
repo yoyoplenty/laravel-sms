@@ -19,7 +19,7 @@ class UpdateGradeRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'name' => "sometimes|min:4|max:4"
+            'name' => "sometimes|string|unique:grades|min:4|max:4"
         ];
     }
 }

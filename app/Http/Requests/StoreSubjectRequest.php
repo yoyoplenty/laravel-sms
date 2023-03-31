@@ -6,13 +6,6 @@ use App\Repositories\GradeRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSubjectRequest extends FormRequest {
-
-    protected $gradeRepository;
-
-    public function __construct(GradeRepository $gradeRepository) {
-        $this->gradeRepository = $gradeRepository;
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,15 +20,10 @@ class StoreSubjectRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            "name" => "required|string",
+            "name" => "required|string|unique:subjects",
             "code" => "required|integer",
             'grade_ids' => 'sometimes|array',
-            'grade_ids.*' => [
-                'required', 'integer', 'distinct',
-                function ($attributes, $value, $fail) {
-                    $this->gradeRepository->findById($value);
-                }
-            ]
+            'grade_ids.*' => 'integer|exists:App\Models\Grade,id',
         ];
     }
 }

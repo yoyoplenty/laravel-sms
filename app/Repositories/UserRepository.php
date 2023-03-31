@@ -26,10 +26,8 @@ class UserRepository extends BaseRepository {
         $data['uuid'] = Uuid::uuid4();
         $data['password'] = Hash::make($password);
 
-        $hashed = Crypt::encryptString($data['uuid']);
-
         $createdUser = $this->create($data);
-        event(new UserCreated($createdUser, $hashed));
+        event(new UserCreated($createdUser));
 
         return $createdUser;
     }

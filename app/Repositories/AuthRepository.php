@@ -70,11 +70,9 @@ class AuthRepository {
             $user = $this->userRepository->findByField('email', $email);
 
             if ($user->is_active === 1) throw new ErrorResponse('user already verified');
-
             $user->update(['uuid' => Uuid::uuid4()]);
-            $hashed = Crypt::encryptString($user->uuid);
 
-            event(new UserCreated($user, $hashed));
+            event(new UserCreated($user));
 
             return $user;
         } catch (Exception $ex) {
@@ -86,11 +84,9 @@ class AuthRepository {
     public function forgotPassword(String $email) {
         try {
             $user = $this->userRepository->findByField('email', $email);
-
             $user->update(['reset_token' => Uuid::uuid4()]);
-            $hashed = Crypt::encryptString($user->reset_token);
 
-            event(new UserResetPassword($user, $hashed));
+            event(new UserResetPassword($user));
 
             return $user;
         } catch (Exception $ex) {

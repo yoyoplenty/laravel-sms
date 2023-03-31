@@ -6,13 +6,6 @@ use App\Repositories\GradeRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserRequest extends FormRequest {
-
-    protected $gradeRepository;
-
-    public function __construct(GradeRepository $gradeRepository) {
-        $this->gradeRepository = $gradeRepository;
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -32,14 +25,7 @@ class UpdateUserRequest extends FormRequest {
             'middlename' => "sometimes|string|min:4|max:30",
             'password' => "sometimes|string|min:5|max:30",
             'phone_number' => 'sometimes|string|min:11|max:11',
-            'grade_id' => [
-                'sometimes', 'integer',
-                function ($attributes, $value, $fail) {
-                    $grade = $this->gradeRepository->findById($value);
-
-                    if (!$grade) $fail($attributes . ' does not exist');
-                }
-            ],
+            'grade_id' => 'sometimes|integer|exists:App\Models\Grade,id',
         ];
     }
 }

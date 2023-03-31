@@ -7,12 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ForgotPasswordRequest extends FormRequest {
 
-    protected $userRepository;
-
-    public function __construct(UserRepository $userRepository,) {
-        $this->userRepository = $userRepository;
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,12 +21,7 @@ class ForgotPasswordRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'email' => [
-                'required', 'email',
-                function ($attributes, $value, $fail) {
-                    $this->userRepository->findByField($attributes, $value);
-                }
-            ],
+            'email' => "required|email|exists:App\Models\User,email",
         ];
     }
 }

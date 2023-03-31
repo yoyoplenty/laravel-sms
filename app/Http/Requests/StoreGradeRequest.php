@@ -19,7 +19,7 @@ class StoreGradeRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            "name" => 'required|string|min:4|max:4',
+            "name" => 'required|string|unique:grades|min:4|max:4',
         ];
     }
 }
