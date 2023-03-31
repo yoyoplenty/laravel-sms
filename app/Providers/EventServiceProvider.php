@@ -6,8 +6,10 @@ use App\Events\UserCreated;
 use App\Events\UserResetPassword;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
+use App\Events\PasswordResetSuccessful;
 use App\Listeners\SendVerificationEmail;
 use App\Listeners\SendResetPasswordEmail;
+use App\Listeners\SendResetSuccessfulEmail;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
         UserResetPassword::class => [
             SendResetPasswordEmail::class,
+        ],
+        PasswordResetSuccessful::class => [
+            SendResetSuccessfulEmail::class,
         ],
     ];
 

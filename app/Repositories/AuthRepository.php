@@ -2,14 +2,15 @@
 
 namespace App\Repositories;
 
-use App\Events\UserCreated;
-use App\Events\UserResetPassword;
 use Exception;
 use Ramsey\Uuid\Uuid;
+use App\Events\UserCreated;
 use Illuminate\Http\Request;
+use App\Events\UserResetPassword;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
+use App\Events\PasswordResetSuccessful;
 
 class AuthRepository {
 
@@ -104,6 +105,8 @@ class AuthRepository {
 
             $hashedPassword = Hash::make($password);
             $user->update(['password' => $hashedPassword]);
+
+            event(new PasswordResetSuccessful($user));
 
             return $user;
         } catch (Exception $ex) {
